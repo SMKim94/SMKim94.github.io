@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -14,17 +12,6 @@
   --color-card-hover: #f3f4f6;
   --color-accent: #6366f1;
   --color-accent-2: #ec4899;
-}
-
-.dark {
-  --color-background: #09090b;
-  --color-foreground: #f4f4f5;
-  --color-muted: #71717a;
-  --color-border: #27272a;
-  --color-card: #18181b;
-  --color-card-hover: #1f1f23;
-  --color-accent: #818cf8;
-  --color-accent-2: #f472b6;
 }
 
 body {

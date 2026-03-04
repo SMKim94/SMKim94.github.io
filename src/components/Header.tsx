@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -46,28 +45,22 @@ export default function Header() {
               )}
             </Link>
           ))}
-          <div className="ml-2">
-            <ThemeToggle />
-          </div>
         </div>
 
         {/* Mobile */}
-        <div className="flex items-center gap-2 sm:hidden">
-          <ThemeToggle />
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border transition-colors hover:bg-card"
-            aria-label="Toggle menu"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              {menuOpen ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-border transition-colors hover:bg-card sm:hidden"
+          aria-label="Toggle menu"
+        >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            {menuOpen ? (
+              <path d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
       </nav>
 
       {/* Mobile menu */}
