@@ -6,25 +6,111 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-background: #ffffff;
+  --color-background: #fafafa;
   --color-foreground: #111111;
   --color-muted: #6b7280;
   --color-border: #e5e7eb;
-  --color-card: #f9fafb;
-  --color-accent: #2563eb;
+  --color-card: #ffffff;
+  --color-card-hover: #f3f4f6;
+  --color-accent: #6366f1;
+  --color-accent-2: #ec4899;
 }
 
 .dark {
-  --color-background: #0a0a0a;
-  --color-foreground: #ededed;
-  --color-muted: #9ca3af;
+  --color-background: #09090b;
+  --color-foreground: #f4f4f5;
+  --color-muted: #71717a;
   --color-border: #27272a;
   --color-card: #18181b;
-  --color-accent: #3b82f6;
+  --color-card-hover: #1f1f23;
+  --color-accent: #818cf8;
+  --color-accent-2: #f472b6;
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Typing cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s infinite;
+  margin-left: 2px;
+  color: var(--color-accent);
+}
+
+/* Fade in up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+
+/* Fade in animation for scroll */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card hover glow */
+.card-glow {
+  position: relative;
+  transition: all 0.3s ease;
+}
+.card-glow:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 15%, transparent);
+  transform: translateY(-2px);
+}
+
+/* Subtle gradient background */
+.bg-gradient-subtle {
+  background: radial-gradient(
+    ellipse at top,
+    color-mix(in srgb, var(--color-accent) 5%, transparent) 0%,
+    transparent 50%
+  );
+}
+
+/* Tag hover */
+.tag {
+  transition: all 0.2s ease;
+}
+.tag:hover {
+  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  color: var(--color-accent);
+}
+
+/* Smooth page transitions */
+main {
+  animation: fadeIn 0.4s ease-out;
 }
