@@ -4,17 +4,18 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-background: #fafafa;
+  --color-background: #f0f0f3;
   --color-foreground: #111111;
   --color-muted: #6b7280;
-  --color-border: #e5e7eb;
+  --color-border: #e0e0e5;
   --color-card: #ffffff;
-  --color-card-hover: #f3f4f6;
   --color-accent: #6366f1;
   --color-accent-2: #ec4899;
 }
 
-body {
+html, body {
+  height: 100%;
+  overflow: hidden;
   background: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
@@ -40,64 +41,53 @@ body {
   color: var(--color-accent);
 }
 
-/* Fade in up animation */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Panel card */
+.panel {
+  background: var(--color-card);
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  transition: all 0.25s ease;
 }
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
-  opacity: 0;
-}
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-.delay-500 { animation-delay: 0.5s; }
-.delay-600 { animation-delay: 0.6s; }
-
-/* Fade in animation for scroll */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Card hover glow */
-.card-glow {
-  position: relative;
-  transition: all 0.3s ease;
-}
-.card-glow:hover {
+.panel:hover {
   border-color: var(--color-accent);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 15%, transparent);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.08);
+  transform: translateY(-1px);
 }
 
-/* Subtle gradient background */
-.bg-gradient-subtle {
-  background: radial-gradient(
-    ellipse at top,
-    color-mix(in srgb, var(--color-accent) 5%, transparent) 0%,
-    transparent 50%
-  );
-}
-
-/* Tag hover */
+/* Tag */
 .tag {
   transition: all 0.2s ease;
 }
 .tag:hover {
-  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  background: rgba(99, 102, 241, 0.1);
   color: var(--color-accent);
 }
 
-/* Smooth page transitions */
-main {
-  animation: fadeIn 0.4s ease-out;
+/* Panel inner scroll */
+.panel-scroll {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
 }
+.panel-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fadeIn 0.4s ease-out forwards;
+  opacity: 0;
+}
+.delay-1 { animation-delay: 0.05s; }
+.delay-2 { animation-delay: 0.1s; }
+.delay-3 { animation-delay: 0.15s; }
+.delay-4 { animation-delay: 0.2s; }
+.delay-5 { animation-delay: 0.25s; }
