@@ -29,7 +29,7 @@ export default function Home() {
   const recentPosts = getAllPosts().slice(0, 3);
 
   return (
-    <div className="bg-gradient-subtle flex flex-col gap-20 py-8">
+    <div className="bg-gradient-subtle -mx-6 -mt-12 flex flex-col gap-20 px-6 py-8">
       {/* Hero */}
       <section className="flex flex-col gap-6 py-12">
         <div className="animate-fade-in-up">
