@@ -4,13 +4,6 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-background: #f0f0f3;
-  --color-foreground: #111111;
-  --color-muted: #6b7280;
-  --color-border: #e0e0e5;
-  --color-card: #ffffff;
-  --color-accent: #6366f1;
-  --color-accent-2: #ec4899;
 }
 
 html, body {
@@ -20,74 +13,3 @@ html, body {
   color: var(--color-foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
 }
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Typing cursor blink */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-.typing-cursor::after {
-  content: '|';
-  animation: blink 1s infinite;
-  margin-left: 2px;
-  color: var(--color-accent);
-}
-
-/* Panel card */
-.panel {
-  background: var(--color-card);
-  border-radius: 16px;
-  border: 1px solid var(--color-border);
-  transition: all 0.25s ease;
-}
-.panel:hover {
-  border-color: var(--color-accent);
-  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.08);
-  transform: translateY(-1px);
-}
-
-/* Tag */
-.tag {
-  transition: all 0.2s ease;
-}
-.tag:hover {
-  background: rgba(99, 102, 241, 0.1);
-  color: var(--color-accent);
-}
-
-/* Panel inner scroll */
-.panel-scroll {
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
-}
-.panel-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-.panel-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 4px;
-}
-
-/* Fade in */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-in {
-  animation: fadeIn 0.4s ease-out forwards;
-  opacity: 0;
-}
-.delay-1 { animation-delay: 0.05s; }
-.delay-2 { animation-delay: 0.1s; }
-.delay-3 { animation-delay: 0.15s; }
-.delay-4 { animation-delay: 0.2s; }
-.delay-5 { animation-delay: 0.25s; }
