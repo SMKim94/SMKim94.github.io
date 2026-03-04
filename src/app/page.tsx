@@ -156,7 +156,7 @@ export default function Home() {
               <ScrollFadeIn key={post.slug} delay={i * 100}>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="card-glow group rounded-xl border border-border bg-card p-6"
+                  className="card-glow group block rounded-xl border border-border bg-card p-6"
                 >
                   <h3 className="font-semibold group-hover:text-accent transition-colors">
                     {post.title}

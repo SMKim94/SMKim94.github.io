@@ -29,7 +29,7 @@ export default function BlogPage() {
             <ScrollFadeIn key={post.slug} delay={i * 100}>
               <Link
                 href={`/blog/${post.slug}`}
-                className="card-glow group rounded-xl border border-border bg-card p-6"
+                className="card-glow group block rounded-xl border border-border bg-card p-6"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
