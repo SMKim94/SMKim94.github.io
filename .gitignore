@@ -1,0 +1,18 @@
+# ── Claude Code / AI 보조 파일: GitHub과 홈페이지에 절대 올리지 않음 ──
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+
+# ── Node / Vite ──
+node_modules/
+dist/
+*.local
+npm-debug.log*
+
+# ── 테스트/검증 산출물 ──
+.playwright-mcp/
+
+# ── OS / 에디터 ──
+.DS_Store
+Thumbs.db
+desktop.ini

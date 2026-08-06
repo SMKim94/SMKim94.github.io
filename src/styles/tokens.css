@@ -1,0 +1,56 @@
+/* Win11 룩 디자인 토큰 — 라이트/다크 */
+:root {
+  --tb-h: 48px;
+  --radius: 8px;
+  --radius-sm: 5px;
+  --font-ui:
+    "Segoe UI Variable", "Segoe UI", "Malgun Gothic", "맑은 고딕", system-ui,
+    sans-serif;
+  --font-mono: "Cascadia Mono", Consolas, "D2Coding", monospace;
+
+  --wallpaper: url("/wallpaper-light.svg");
+  --mica: rgba(243, 243, 243, 0.8);
+  --acrylic: rgba(250, 250, 250, 0.75);
+  --surface: #f3f3f3;
+  --card: #ffffff;
+  --card-hover: rgba(0, 0, 0, 0.05);
+  --card-active: rgba(0, 0, 0, 0.09);
+  --text: #1a1a1a;
+  --text-2: rgba(0, 0, 0, 0.62);
+  --text-3: rgba(0, 0, 0, 0.44);
+  --stroke: rgba(0, 0, 0, 0.09);
+  --stroke-strong: rgba(0, 0, 0, 0.17);
+  --accent: #0067c0;
+  --on-accent: #ffffff;
+  --sel: rgba(0, 103, 192, 0.13);
+  --sel-stroke: rgba(0, 103, 192, 0.35);
+  --sm-footer: rgba(0, 0, 0, 0.04);
+  --shadow-win:
+    0 22px 52px rgba(0, 0, 0, 0.28), 0 2px 10px rgba(0, 0, 0, 0.14);
+  --shadow-win-inactive: 0 10px 26px rgba(0, 0, 0, 0.16);
+  --shadow-menu: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+:root[data-theme="dark"] {
+  --wallpaper: url("/wallpaper-dark.svg");
+  --mica: rgba(32, 32, 32, 0.84);
+  --acrylic: rgba(38, 38, 38, 0.8);
+  --surface: #202020;
+  --card: #2b2b2b;
+  --card-hover: rgba(255, 255, 255, 0.065);
+  --card-active: rgba(255, 255, 255, 0.11);
+  --text: #f2f2f2;
+  --text-2: rgba(255, 255, 255, 0.66);
+  --text-3: rgba(255, 255, 255, 0.44);
+  --stroke: rgba(255, 255, 255, 0.09);
+  --stroke-strong: rgba(255, 255, 255, 0.17);
+  --accent: #4cc2ff;
+  --on-accent: #002743;
+  --sel: rgba(76, 194, 255, 0.16);
+  --sel-stroke: rgba(76, 194, 255, 0.42);
+  --sm-footer: rgba(0, 0, 0, 0.22);
+  --shadow-win:
+    0 22px 52px rgba(0, 0, 0, 0.55), 0 2px 10px rgba(0, 0, 0, 0.4);
+  --shadow-win-inactive: 0 10px 26px rgba(0, 0, 0, 0.4);
+  --shadow-menu: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
