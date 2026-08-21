@@ -6,6 +6,7 @@ import { QuickSettings } from "./os/QuickSettings";
 import { StartMenu } from "./os/StartMenu";
 import { SystemProvider, useSystem } from "./os/System";
 import { Taskbar, type Flyout } from "./os/Taskbar";
+import { TaskView } from "./os/TaskView";
 import { Window } from "./os/Window";
 import { WindowsProvider, useWindows } from "./os/WindowManager";
 
@@ -32,6 +33,7 @@ function Shell() {
       <Taskbar flyout={flyout} setFlyout={setFlyout} />
       {flyout === "start" && <StartMenu onClose={() => setFlyout(null)} />}
       {flyout === "quick" && <QuickSettings onClose={() => setFlyout(null)} />}
+      {flyout === "taskview" && <TaskView onClose={() => setFlyout(null)} />}
       <PowerOverlays />
     </div>
   );
