@@ -63,6 +63,9 @@ export function Terminal({ win }: { win: WinState }) {
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
+    // lines/busy는 본문에서 쓰지 않지만, 내용이 바뀔 때 맨 아래로 따라 내려가려면
+    // 트리거로 필요하다. 지우면 자동 스크롤이 멈춘다.
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [lines, busy]);
 
   useEffect(() => {

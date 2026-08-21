@@ -66,7 +66,7 @@ export function Desktop() {
   ) {
     e.preventDefault();
     e.stopPropagation();
-    const items: MenuItem[] =
+    const menuItems: MenuItem[] =
       name === null
         ? [
             {
@@ -88,7 +88,7 @@ export function Desktop() {
             },
           ];
     setSel(name ?? "$recycle");
-    setMenu({ x: e.clientX, y: e.clientY, items });
+    setMenu({ x: e.clientX, y: e.clientY, items: menuItems });
   }
 
   return (

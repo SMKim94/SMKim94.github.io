@@ -239,7 +239,7 @@ describe("collectFiles", () => {
 
 describe("구독", () => {
   it("변경이 있으면 구독자에게 알리고 버전이 오른다", () => {
-    const spy = vi.fn();
+    const spy = vi.fn<() => void>();
     const unsubscribe = m.fs.subscribe(spy);
     const before = m.fs.getVersion();
 
