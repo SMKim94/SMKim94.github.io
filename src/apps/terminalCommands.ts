@@ -60,8 +60,22 @@ export function displayCwd(cwd: string): string {
 export function unquote(s: string): string {
   return s.replace(/^"(.*)"$/s, "$1");
 }
+
+/**
+ * cmd처럼 점만 있는 경로를 상위 이동으로 푼다.
+ * 점 n개는 n-1단계 위 — ".."은 한 단계, "..."은 두 단계, "...."은 세 단계.
+ *
+ * resolvePath는 ".."만 알아서 "..."을 이름이 점 세 개인 폴더로 취급한다.
+ * 이건 cmd의 셸 문법이지 Windows 경로 문법이 아니라서,
+ * filesystem이 아니라 여기서 미리 펼쳐준다.
+ */
+export function expandDots(arg: string): string {
+  if (!/^\.{3,}$/.test(arg)) return arg;
+  return Array.from({ length: arg.length - 1 }, () => "..").join("\\");
+}
+
 export function cmdDir(host: TerminalHost, arg: string | undefined): string[] {
-  const target = arg ? resolvePath(host.cwd, unquote(arg)) : host.cwd;
+  const target = arg ? resolvePath(host.cwd, expandDots(unquote(arg))) : host.cwd;
   const canonical = fs.canonicalize(target);
   const node = canonical ? fs.getNode(canonical) : null;
   if (!node || node.type !== "folder") {
@@ -101,7 +115,7 @@ export function cmdTree(
   arg: string | undefined,
   withFiles: boolean,
 ): string[] {
-  const target = arg ? resolvePath(host.cwd, unquote(arg)) : host.cwd;
+  const target = arg ? resolvePath(host.cwd, expandDots(unquote(arg))) : host.cwd;
   const canonical = fs.canonicalize(target);
   const node = canonical ? fs.getNode(canonical) : null;
   if (!node || node.type !== "folder") {
@@ -169,7 +183,7 @@ export function exec(host: TerminalHost, raw: string): void {
         host.print(displayCwd(host.cwd));
         break;
       }
-      const target = resolvePath(host.cwd, unquote(args.join(" ")));
+      const target = resolvePath(host.cwd, expandDots(unquote(args.join(" "))));
       const canonical = fs.canonicalize(target);
       const node = canonical ? fs.getNode(canonical) : null;
       if (node && node.type === "folder") host.setCwd(canonical!);
@@ -186,7 +200,7 @@ export function exec(host: TerminalHost, raw: string): void {
         host.print("명령 구문이 올바르지 않습니다.");
         break;
       }
-      const p = resolvePath(host.cwd, unquote(args.join(" ")));
+      const p = resolvePath(host.cwd, expandDots(unquote(args.join(" "))));
       const node = fs.getNode(p);
       if (!node) host.print("지정된 파일을 찾을 수 없습니다.");
       else if (node.type === "folder") host.print("액세스가 거부되었습니다.");
@@ -279,7 +293,7 @@ export function exec(host: TerminalHost, raw: string): void {
       if (args.length === 0) {
         host.openApp("notepad");
       } else {
-        const p = resolvePath(host.cwd, unquote(args.join(" ")));
+        const p = resolvePath(host.cwd, expandDots(unquote(args.join(" "))));
         const canonical = fs.canonicalize(p);
         const node = canonical ? fs.getNode(canonical) : null;
         if (node && node.type === "file")
@@ -292,7 +306,7 @@ export function exec(host: TerminalHost, raw: string): void {
       if (args.length === 0) {
         host.openApp("explorer", { path: HOME_VIEW });
       } else {
-        const p = resolvePath(host.cwd, unquote(args.join(" ")));
+        const p = resolvePath(host.cwd, expandDots(unquote(args.join(" "))));
         const canonical = fs.canonicalize(p);
         const node = canonical ? fs.getNode(canonical) : null;
         host.openApp("explorer", {
