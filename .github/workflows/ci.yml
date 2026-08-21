@@ -1,0 +1,46 @@
+name: CI
+
+# 배포(deploy.yml)와 분리한다. 이쪽은 main에 들어가기 전에 검사하는 용도라
+# PR에서 돌고, main 직접 푸시도 회귀 감시를 위해 함께 본다.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# 같은 브랜치에 새 커밋이 오면 진행 중인 실행은 취소한다.
+concurrency:
+  group: "ci-${{ github.ref }}"
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # .node-version이 Node 버전의 단일 출처 (.npmrc의 engine-strict가 강제한다)
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: ".node-version"
+          cache: "npm"
+
+      - id: install
+        run: npm ci
+
+      # 검사 단계는 앞 단계가 실패해도 마저 돌려서 한 번에 전체 상태를 본다.
+      # 다만 설치가 깨졌다면 돌려봐야 의미 없는 오류만 나오므로 그때는 건너뛴다.
+      - name: 린트
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run lint
+
+      - name: 테스트
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm test
+
+      # 타입 체크(tsc -b)까지 포함한다.
+      - name: 빌드
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run build
