@@ -64,7 +64,7 @@ textarea {
 .desktop {
   position: absolute;
   inset: 0;
-  background: var(--wallpaper) center / cover no-repeat, #1d4fae;
+  background: var(--wallpaper);
 }
 
 .desktop-icons {
@@ -284,13 +284,15 @@ textarea {
   right: 0;
   bottom: 0;
   height: var(--tb-h);
-  background: var(--acrylic);
-  backdrop-filter: blur(24px) saturate(1.5);
-  -webkit-backdrop-filter: blur(24px) saturate(1.5);
-  border-top: 1px solid var(--stroke);
+  /* Win11 작업표시줄은 아크릴이지만 배경색에 크게 물들지 않는다.
+     saturate를 낮춰 바탕 화면의 색이 배어 나오는 정도를 줄인다. */
+  background: var(--taskbar-bg);
+  backdrop-filter: blur(40px) saturate(1.1);
+  -webkit-backdrop-filter: blur(40px) saturate(1.1);
+  border-top: 1px solid var(--taskbar-stroke);
   display: flex;
   align-items: center;
-  padding: 0 4px 0 12px;
+  padding: 0 0 0 12px;
   z-index: 5000;
 }
 
@@ -301,18 +303,21 @@ textarea {
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
 }
 
 .tb-btn {
   width: 40px;
   height: 40px;
-  border-radius: 6px;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: background 0.12s;
+  color: var(--text);
+  transition:
+    background 0.12s ease,
+    transform 0.12s ease;
 }
 
 .tb-btn:hover,
@@ -322,42 +327,79 @@ textarea {
 
 .tb-btn:active {
   background: var(--card-active);
+  transform: scale(0.94);
 }
 
+/* 실행 중 표시 — 아이콘 아래 짧은 막대, 활성 창은 길고 강조색 */
 .tb-btn.running::after {
   content: "";
   position: absolute;
-  bottom: 3px;
+  bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
   width: 6px;
   height: 3px;
   border-radius: 2px;
   background: var(--text-3);
-  transition: width 0.15s;
+  transition:
+    width 0.16s ease,
+    background 0.16s ease;
 }
 
 .tb-btn.active::after {
-  width: 16px;
+  width: 17px;
   background: var(--accent);
 }
 
+/* 검색 알약 */
+.tb-search {
+  height: 32px;
+  min-width: 148px;
+  padding: 0 14px 0 12px;
+  margin: 0 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  background: var(--tb-pill);
+  border: 1px solid var(--tb-pill-stroke);
+  color: var(--text);
+  font-size: 12.5px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.tb-search:hover,
+.tb-search.open {
+  background: var(--card);
+  border-color: var(--stroke-strong);
+}
+
+.tb-search span {
+  opacity: 0.85;
+}
+
+/* ── 시스템 트레이 ── */
 .tb-right {
   margin-left: auto;
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 0;
+  padding-right: 2px;
 }
 
 .tb-tray-btn {
   height: 40px;
-  border-radius: 6px;
-  padding: 0 8px;
+  border-radius: 5px;
+  padding: 0 6px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   color: var(--text);
+  transition: background 0.12s ease;
 }
 
 .tb-tray-btn:hover,
@@ -365,14 +407,44 @@ textarea {
   background: var(--card-hover);
 }
 
+.tb-chevron {
+  padding: 0 8px;
+}
+
+/* 입력기 표시: 상태만 알려주므로 누르는 곳이 아니다 */
+.tb-ime {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 7px;
+  color: var(--text);
+}
+
+.tb-ime-mode {
+  font-size: 12.5px;
+  min-width: 11px;
+  text-align: center;
+}
+
+.tb-status {
+  gap: 9px;
+  padding: 0 8px;
+}
+
 .tb-clock {
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  gap: 1px;
-  font-size: 11.5px;
-  line-height: 1.15;
+  gap: 0;
+  font-size: 12px;
+  line-height: 1.35;
   padding: 0 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tb-bell {
+  padding: 0 7px;
 }
 
 .tb-show-desktop {
@@ -383,6 +455,113 @@ textarea {
 
 .tb-show-desktop:hover {
   border-left-color: var(--stroke-strong);
+}
+
+/* ─────────────────────────── 작업 보기 ────────────────────── */
+.taskview {
+  position: fixed;
+  inset: 0 0 var(--tb-h) 0;
+  z-index: 8995;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  /* 흐림을 세게 주면 창 가장자리에서 후광이 생긴다.
+     Win11처럼 어둡게 덮는 쪽에 무게를 두고 흐림은 약하게. */
+  background: rgba(28, 30, 32, 0.72);
+  backdrop-filter: blur(10px) saturate(1.05);
+  -webkit-backdrop-filter: blur(10px) saturate(1.05);
+  animation: taskview-in 0.16s ease;
+}
+
+@keyframes taskview-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.taskview-empty {
+  color: #fff;
+  font-size: 15px;
+  opacity: 0.85;
+}
+
+.taskview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  justify-content: center;
+  max-width: 1100px;
+}
+
+.taskview-card {
+  width: 232px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: var(--radius);
+  padding: 0;
+  transition: transform 0.12s ease;
+}
+
+.taskview-card:hover {
+  transform: translateY(-2px);
+}
+
+/* 실제 창 미리보기는 만들 수 없으니, 제목 표시줄이 있는 작은 창처럼 보이게 한다 */
+.taskview-thumb {
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 1px solid var(--stroke-strong);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.taskview-thumb-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  font-size: 11px;
+  color: var(--text-2);
+  background: var(--surface);
+  border-bottom: 1px solid var(--stroke);
+}
+
+.taskview-thumb-bar span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.taskview-thumb-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.taskview-card:hover .taskview-thumb {
+  border-color: var(--accent);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+
+.taskview-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #fff;
+  font-size: 12.5px;
+  padding: 0 2px;
+}
+
+.taskview-label span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ─────────────────────────── 플라이아웃 공통 ──────────────── */
@@ -396,18 +575,19 @@ textarea {
 .start-menu {
   position: fixed;
   left: 50%;
-  bottom: calc(var(--tb-h) + 10px);
+  bottom: calc(var(--tb-h) + 12px);
   transform: translateX(-50%);
-  width: min(600px, calc(100vw - 20px));
-  max-height: calc(100vh - var(--tb-h) - 24px);
-  background: var(--acrylic);
-  backdrop-filter: blur(40px) saturate(1.6);
-  -webkit-backdrop-filter: blur(40px) saturate(1.6);
-  border: 1px solid var(--stroke);
-  border-radius: 10px;
+  /* Win11 시작 메뉴는 좁고 높다 (640 x 730 근처) */
+  width: min(640px, calc(100vw - 20px));
+  height: min(730px, calc(100vh - var(--tb-h) - 28px));
+  background: var(--menu-acrylic);
+  backdrop-filter: blur(60px) saturate(1.15);
+  -webkit-backdrop-filter: blur(60px) saturate(1.15);
+  border: 1px solid var(--menu-stroke);
+  border-radius: 8px;
   box-shadow: var(--shadow-menu);
   z-index: 9000;
-  padding: 22px 28px 0;
+  padding: 26px 32px 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -462,7 +642,7 @@ textarea {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 4px;
-  min-height: 86px;
+  min-height: 264px;
   align-content: start;
   flex-shrink: 0;
 }
@@ -490,6 +670,8 @@ textarea {
 }
 
 .sm-recents {
+  flex: 1;
+  overflow-y: auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px 14px;

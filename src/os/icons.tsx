@@ -265,6 +265,50 @@ export function UserIcon(p: P) {
   );
 }
 
+// ── 작업표시줄·시스템 트레이 ─────────────────────────────
+/** 작업 보기: 큰 창 하나와 오른쪽에 작은 창 둘 */
+export function TaskViewIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <rect x="2.5" y="5.5" width="11" height="13" rx="1.8" />
+      <rect x="16" y="5.5" width="5.5" height="5.5" rx="1.3" />
+      <rect x="16" y="13" width="5.5" height="5.5" rx="1.3" />
+    </Mono>
+  );
+}
+
+/** 입력기: 키보드 */
+export function KeyboardIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <rect x="2.5" y="6.5" width="19" height="11" rx="2" />
+      <path d="M6 10h.01M9.5 10h.01M13 10h.01M16.5 10h.01M6 13.2h.01M9.5 13.2h.01M13 13.2h.01M16.5 13.2h.01" />
+      <path d="M8 15.6h8" />
+    </Mono>
+  );
+}
+
+/** 유선 네트워크 연결 — Win11 트레이의 모니터 모양 글리프 */
+export function EthernetIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <rect x="3" y="5" width="18" height="12" rx="2" />
+      <path d="M9 20h6" />
+      <path d="M12 17v3" />
+    </Mono>
+  );
+}
+
+/** 알림 종 */
+export function BellIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 4 1.5 5.2 1.5 5.2H5s1.5-1.2 1.5-5.2Z" />
+      <path d="M10.2 18a2 2 0 0 0 3.6 0" />
+    </Mono>
+  );
+}
+
 export function ChevronUpIcon(p: P) {
   return (
     <Mono {...p}>
