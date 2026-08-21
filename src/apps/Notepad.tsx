@@ -27,7 +27,9 @@ export function Notepad({ win }: { win: WinState }) {
 
   useEffect(() => {
     wm.setTitle(win.id, `${dirty ? "*" : ""}${fileName} - 메모장`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // wm은 렌더마다 새로 만들어져 의존성에 넣으면 매번 다시 실행된다.
+    // 제목이 바뀔 때만 돌면 충분하므로 의도적으로 뺀다.
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [dirty, fileName, win.id]);
 
   function save() {
