@@ -1,0 +1,31 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "react", "import", "promise", "vitest"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error"
+  },
+  "env": {
+    "browser": true,
+    "es2022": true
+  },
+  "ignorePatterns": ["dist", "node_modules"],
+  "rules": {
+    // 이 프로젝트는 최신 JSX 변환(tsconfig의 jsx: react-jsx)을 쓴다.
+    // React를 스코프에 두지 않아도 되므로 이 규칙은 오탐이다.
+    "react/react-in-jsx-scope": "off",
+    // main.tsx가 CSS를 부수효과로 import한다. 번들러 환경의 정상 패턴.
+    "import/no-unassigned-import": "off",
+    // 이 저장소의 .sort() 호출은 모두 스프레드/filter로 만든 사본 위에서 돌아
+    // 원본을 건드리지 않는다. 게다가 대안인 toSorted()는 lib ES2023이 필요한데
+    // tsconfig는 ES2022라 타입 체크를 통과하지 못한다.
+    "unicorn/no-array-sort": "off",
+    "no-console": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "src/test/**"],
+      "env": { "node": true }
+    }
+  ]
+}
