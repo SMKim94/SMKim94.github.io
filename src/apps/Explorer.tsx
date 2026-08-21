@@ -7,14 +7,28 @@ import {
   HOME,
   HOME_VIEW,
   RECYCLE_PATH,
-  baseName,
   formatDateTime,
   fs,
-  splitPath,
   useFsVersion,
   type FsNode,
 } from "../os/filesystem";
 import { useWindows, type WinState } from "../os/WindowManager";
+import {
+  type History,
+  back,
+  canBack,
+  canFwd,
+  canUp,
+  crumbsFor,
+  currentPath,
+  displayName,
+  filterItems,
+  forward,
+  initHistory,
+  isVirtualPath,
+  navigate as navigateTo,
+  upFrom,
+} from "./explorerNav";
 import {
   BackIcon,
   BinMonoIcon,
@@ -58,13 +72,6 @@ interface MenuState {
   items: MenuItem[];
 }
 
-function displayName(path: string): string {
-  if (path === HOME_VIEW) return "홈";
-  if (path === RECYCLE_PATH) return "휴지통";
-  if (path === "C:") return "로컬 디스크 (C:)";
-  return baseName(path);
-}
-
 function nodeIcon(n: FsNode, size: number) {
   if (n.type === "folder") return <FolderIcon size={size} />;
   if (n.name.toLowerCase().endsWith(".exe")) return <ExeIcon size={size} />;
@@ -75,11 +82,10 @@ function nodeIcon(n: FsNode, size: number) {
 export function Explorer({ win }: { win: WinState }) {
   useFsVersion();
   const wm = useWindows();
-  const [hist, setHist] = useState<{ stack: string[]; idx: number }>(() => ({
-    stack: [win.args?.path ?? HOME_VIEW],
-    idx: 0,
-  }));
-  const path = hist.stack[hist.idx];
+  const [hist, setHist] = useState<History>(() =>
+    initHistory(win.args?.path ?? HOME_VIEW),
+  );
+  const path = currentPath(hist);
   const [sel, setSel] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [menu, setMenu] = useState<MenuState | null>(null);
@@ -87,44 +93,37 @@ export function Explorer({ win }: { win: WinState }) {
   const title = displayName(path);
   useEffect(() => {
     wm.setTitle(win.id, title);
-    // eslint 없음 — wm은 안정적이지 않지만 title 변경 시에만 실행되면 충분하다.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // wm은 렌더마다 새로 만들어져 의존성에 넣으면 매번 다시 실행된다.
+    // 제목이 바뀔 때만 돌면 충분하므로 의도적으로 뺀다.
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [title, win.id]);
 
   function navigate(p: string) {
-    setHist((h) => ({
-      stack: [...h.stack.slice(0, h.idx + 1), p],
-      idx: h.idx + 1,
-    }));
+    setHist((h) => navigateTo(h, p));
     setSel(null);
     setQ("");
   }
 
-  const canBack = hist.idx > 0;
-  const canFwd = hist.idx < hist.stack.length - 1;
-  const canUp = path !== HOME_VIEW;
+  const backEnabled = canBack(hist);
+  const fwdEnabled = canFwd(hist);
+  const upEnabled = canUp(path);
 
   function goBack() {
-    if (canBack) setHist((h) => ({ ...h, idx: h.idx - 1 }));
+    setHist(back);
     setSel(null);
   }
   function goFwd() {
-    if (canFwd) setHist((h) => ({ ...h, idx: h.idx + 1 }));
+    setHist(forward);
     setSel(null);
   }
   function goUp() {
-    if (path === HOME_VIEW) return;
-    if (path === RECYCLE_PATH || path === "C:") navigate(HOME_VIEW);
-    else navigate(splitPath(path).slice(0, -1).join("\\"));
+    const target = upFrom(path);
+    if (target !== null) navigate(target);
   }
 
   const rawItems: FsNode[] =
     path === HOME_VIEW || path === RECYCLE_PATH ? [] : fs.list(path);
-  const items = q.trim()
-    ? rawItems.filter((n) =>
-        n.name.toLowerCase().includes(q.trim().toLowerCase()),
-      )
-    : rawItems;
+  const items = filterItems(rawItems, q);
 
   function openNode(n: FsNode) {
     const p = `${path}\\${n.name}`;
@@ -203,23 +202,9 @@ export function Explorer({ win }: { win: WinState }) {
     });
   }
 
-  // ── 브레드크럼 ───────────────────────────────────────
-  let crumbs: { label: string; path: string }[];
-  if (path === HOME_VIEW) crumbs = [{ label: "홈", path: HOME_VIEW }];
-  else if (path === RECYCLE_PATH)
-    crumbs = [{ label: "휴지통", path: RECYCLE_PATH }];
-  else {
-    const segs = splitPath(path);
-    crumbs = [
-      { label: "내 PC", path: HOME_VIEW },
-      ...segs.map((s, i) => ({
-        label: i === 0 ? "로컬 디스크 (C:)" : s,
-        path: segs.slice(0, i + 1).join("\\"),
-      })),
-    ];
-  }
+  const crumbs = crumbsFor(path);
 
-  const isVirtual = path === HOME_VIEW || path === RECYCLE_PATH;
+  const isVirtual = isVirtualPath(path);
   const statusCount =
     path === RECYCLE_PATH
       ? fs.recycle.length
@@ -304,13 +289,13 @@ export function Explorer({ win }: { win: WinState }) {
 
       {/* 주소 표시줄 */}
       <div className="ex-nav">
-        <button className="ex-nav-btn" disabled={!canBack} onClick={goBack} aria-label="뒤로">
+        <button className="ex-nav-btn" disabled={!backEnabled} onClick={goBack} aria-label="뒤로">
           <BackIcon size={16} />
         </button>
-        <button className="ex-nav-btn" disabled={!canFwd} onClick={goFwd} aria-label="앞으로">
+        <button className="ex-nav-btn" disabled={!fwdEnabled} onClick={goFwd} aria-label="앞으로">
           <ForwardIcon size={16} />
         </button>
-        <button className="ex-nav-btn" disabled={!canUp} onClick={goUp} aria-label="위로">
+        <button className="ex-nav-btn" disabled={!upEnabled} onClick={goUp} aria-label="위로">
           <UpIcon size={16} />
         </button>
         <div className="ex-breadcrumb">
