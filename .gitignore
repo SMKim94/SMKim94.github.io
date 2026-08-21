@@ -1,7 +1,12 @@
 # ── Claude Code / AI 보조 파일: GitHub과 홈페이지에 절대 올리지 않음 ──
+# 예외: .claude/settings.json과 hooks/는 개발 환경 부트스트랩(Node 26 설치)에
+# 필요해서 공유한다. 그 외 .claude/ 하위(로컬 설정·대화 기록 등)는 계속 제외.
 CLAUDE.md
 CLAUDE.local.md
-.claude/
+.claude/*
+!.claude/settings.json
+!.claude/hooks/
+.claude/settings.local.json
 
 # ── Node / Vite ──
 node_modules/
