@@ -183,12 +183,56 @@ describe("cd / chdir", () => {
     expect(h.host.cwd).toBe(h.fsm.HOME);
   });
 
-  // 실제 cmd에서 cd...은 두 단계 위로 간다. 이 구현은 "..."을 경로 조각으로
-  // 그대로 넘겨서 해석하지 못하고 실패한다. 현 동작을 그대로 고정해 둔다.
-  it("cd...은 두 단계 위로 가지 못하고 경로 오류를 낸다", () => {
-    h.run("cd...");
-    expect(h.out[0]).toBe("지정된 경로를 찾을 수 없습니다.");
-    expect(h.host.cwd).toBe(h.fsm.HOME);
+  // HOME(C:\Users\SMKim94)에서는 두 단계만 올라가도 드라이브 루트에 닿아
+  // ...과 ....이 구분되지 않는다. 단계가 드러나도록 더 깊은 곳에서 확인한다.
+  describe("점 여러 개로 여러 단계 올라가기", () => {
+    const DEEP = "C:\\Users\\SMKim94\\문서\\가";
+
+    beforeEach(() => {
+      h.fsm.fs.mkdir(`${h.fsm.DOCUMENTS_DIR}\\가`);
+      h.run(`cd ${DEEP}`);
+    });
+
+    it("준비: 깊은 위치로 이동해 있다", () => {
+      expect(h.host.cwd).toBe(DEEP);
+    });
+
+    it("cd..은 한 단계", () => {
+      h.run("cd..");
+      expect(h.host.cwd).toBe(h.fsm.DOCUMENTS_DIR);
+    });
+
+    it("cd...은 두 단계", () => {
+      h.run("cd...");
+      expect(h.host.cwd).toBe(h.fsm.HOME);
+      expect(h.out).toEqual([""]);
+    });
+
+    it("cd ... 처럼 띄어 써도 두 단계", () => {
+      h.run("cd ...");
+      expect(h.host.cwd).toBe(h.fsm.HOME);
+    });
+
+    it("cd....은 세 단계", () => {
+      h.run("cd....");
+      expect(h.host.cwd).toBe("C:\\Users");
+    });
+
+    it("cd.....은 네 단계 (드라이브 루트)", () => {
+      h.run("cd.....");
+      expect(h.host.cwd).toBe("C:");
+    });
+
+    it("점을 더 찍어도 드라이브 루트를 넘지 않는다", () => {
+      h.run("cd.........");
+      expect(h.host.cwd).toBe("C:");
+    });
+  });
+
+  it("점으로 시작해도 이름이 섞이면 폴더 이름으로 본다", () => {
+    h.fsm.fs.mkdir(`${h.fsm.HOME}\\...점세개폴더`);
+    h.run("cd ...점세개폴더");
+    expect(h.host.cwd).toBe(`${h.fsm.HOME}\\...점세개폴더`);
   });
 
   it("공백이 있는 이름은 따옴표로 감싸 이동한다", () => {
@@ -627,5 +671,63 @@ describe("unquote", () => {
 
   it("따옴표가 없으면 그대로", () => {
     expect(h.cmds.unquote("문서")).toBe("문서");
+  });
+});
+
+describe("expandDots", () => {
+  it("점 두 개는 그대로 둔다 (resolvePath가 이미 안다)", () => {
+    expect(h.cmds.expandDots("..")).toBe("..");
+  });
+
+  it("점 세 개 → 두 단계", () => {
+    expect(h.cmds.expandDots("...")).toBe("..\\..");
+  });
+
+  it("점 네 개 → 세 단계", () => {
+    expect(h.cmds.expandDots("....")).toBe("..\\..\\..");
+  });
+
+  it("점 하나는 제자리이므로 그대로", () => {
+    expect(h.cmds.expandDots(".")).toBe(".");
+  });
+
+  it("점 말고 다른 글자가 섞이면 건드리지 않는다", () => {
+    expect(h.cmds.expandDots("..a")).toBe("..a");
+    expect(h.cmds.expandDots("...폴더")).toBe("...폴더");
+  });
+});
+
+describe("... 를 받는 다른 명령", () => {
+  beforeEach(() => {
+    h.fsm.fs.mkdir(`${h.fsm.DOCUMENTS_DIR}\\가`);
+    h.run("cd C:\\Users\\SMKim94\\문서\\가");
+  });
+
+  it("dir ...은 두 단계 위 디렉터리를 나열한다", () => {
+    h.run("dir ...");
+    expect(h.out[3]).toBe(` ${h.fsm.HOME} 디렉터리`);
+  });
+
+  it("tree ...도 두 단계 위를 그린다", () => {
+    h.run("tree ...");
+    expect(h.out[0]).toBe(h.fsm.HOME);
+  });
+
+  it("explorer ...도 두 단계 위를 연다", () => {
+    h.run("explorer ...");
+    expect(h.calls).toEqual([`open:explorer:${h.fsm.HOME}`]);
+  });
+
+  // 만들기·지우기 명령은 일부러 제외했다. 거기서 "..."을 상위 이동으로 보면
+  // 엉뚱한 대상을 건드릴 수 있어서, 점 세 개짜리 이름으로 그대로 둔다.
+  it("mkdir ...은 상위로 해석하지 않고 이름으로 쓴다", () => {
+    h.run("mkdir ...");
+    expect(h.fsm.fs.exists("C:\\Users\\SMKim94\\문서\\가\\...")).toBe(true);
+  });
+
+  it("rmdir ...도 상위를 지우지 않는다", () => {
+    h.run("rmdir ...");
+    expect(h.out[0]).toBe("지정된 경로를 찾을 수 없습니다.");
+    expect(h.fsm.fs.exists(h.fsm.HOME)).toBe(true);
   });
 });
