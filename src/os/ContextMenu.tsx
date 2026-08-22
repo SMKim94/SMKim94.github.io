@@ -7,6 +7,14 @@ import {
 } from "react";
 import { ChevronRightIcon } from "./icons";
 
+/** 메뉴 위쪽 아이콘 줄 (Win11의 잘라내기·복사·이름 바꾸기·삭제) */
+export interface MenuCommand {
+  label: string;
+  icon: ReactNode;
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
 export interface MenuItem {
   label?: string;
   icon?: ReactNode;
@@ -23,11 +31,13 @@ export function ContextMenu({
   x,
   y,
   items,
+  commands,
   onClose,
 }: {
   x: number;
   y: number;
   items: MenuItem[];
+  commands?: MenuCommand[];
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -67,6 +77,26 @@ export function ContextMenu({
       style={{ left: pos.x, top: pos.y }}
       role="menu"
     >
+      {commands && commands.length > 0 && (
+        <div className="ctx-commands">
+          {commands.map((c) => (
+            <button
+              key={c.label}
+              className="ctx-cmd"
+              disabled={c.disabled}
+              title={c.label}
+              aria-label={c.label}
+              onClick={() => {
+                c.onClick?.();
+                onClose();
+              }}
+            >
+              {c.icon}
+              <span>{c.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
       {items.map((item, i) =>
         item.sep ? (
           <div key={i} className="ctx-sep" />

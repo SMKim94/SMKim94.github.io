@@ -37,6 +37,15 @@ export const DOCUMENTS_DIR = `${HOME}\\문서`;
 export const RECYCLE_PATH = "recycle:";
 /** 탐색기 홈(빠른 액세스) 가상 경로 */
 export const HOME_VIEW = "home:";
+/** 탐색기에서 "내 PC"(장치 및 드라이브)를 나타내는 가상 경로 */
+export const PC_VIEW = "pc:";
+
+/**
+ * 표시용 드라이브 용량. 가짜 파일시스템이라 실제 크기가 없으니
+ * 탐색기와 dir 명령이 같은 값을 쓰도록 여기서 한 번만 정한다.
+ */
+export const DRIVE_TOTAL_BYTES = 952 * 1024 ** 3;
+export const DRIVE_FREE_BYTES = 350 * 1024 ** 3;
 
 const STORAGE_KEY = "smk-os.fs.v1";
 

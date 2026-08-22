@@ -17,7 +17,7 @@
   --tb-pill: rgba(255, 255, 255, 0.92);
   --tb-pill-stroke: rgba(0, 0, 0, 0.07);
   /* 시작 메뉴·퀵 설정은 배경보다 확실히 밝아야 Win11처럼 보인다 */
-  --menu-acrylic: rgba(249, 249, 249, 0.87);
+  --menu-acrylic: rgba(250, 250, 250, 0.93);
   --menu-stroke: rgba(255, 255, 255, 0.65);
   --surface: #f3f3f3;
   --card: #ffffff;

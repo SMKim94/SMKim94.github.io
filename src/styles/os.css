@@ -277,6 +277,115 @@ textarea {
   cursor: sw-resize;
 }
 
+/* ── 컨텍스트 메뉴 상단 아이콘 줄 (Win11) ── */
+.ctx-commands {
+  display: flex;
+  gap: 2px;
+  padding: 2px 2px 6px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.ctx-cmd {
+  flex: 1;
+  min-width: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px 6px;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.25;
+  text-align: center;
+  transition: background 0.12s;
+}
+
+.ctx-cmd:hover:not(:disabled) {
+  background: var(--card-hover);
+}
+
+.ctx-cmd:disabled {
+  color: var(--text-3);
+  cursor: default;
+}
+
+/* ── 내 PC: 장치 및 드라이브 ── */
+.ex-group-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.ex-drive-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 2px 4px;
+}
+
+.ex-drive {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 262px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  text-align: left;
+  transition: background 0.12s;
+}
+
+.ex-drive:hover {
+  background: var(--card-hover);
+}
+
+.ex-drive.selected {
+  background: var(--sel);
+  border-color: var(--sel-stroke);
+}
+
+.ex-drive-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ex-drive-name {
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+/* 용량 막대 */
+.ex-drive-bar {
+  height: 8px;
+  border-radius: 2px;
+  background: var(--card-active);
+  border: 1px solid var(--stroke);
+  overflow: hidden;
+}
+
+.ex-drive-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.ex-drive-sub {
+  font-size: 11.5px;
+  color: var(--text-2);
+}
+
+/* 사이드바에서 드라이브는 내 PC 아래 한 단계 들여쓴다 */
+.ex-side-child {
+  padding-left: 30px;
+}
+
 /* ─────────────────────────── 작업표시줄 ───────────────────── */
 .taskbar {
   position: absolute;
@@ -866,10 +975,10 @@ textarea {
   position: fixed;
   z-index: 9500;
   min-width: 200px;
-  background: var(--acrylic);
-  backdrop-filter: blur(30px) saturate(1.5);
-  -webkit-backdrop-filter: blur(30px) saturate(1.5);
-  border: 1px solid var(--stroke);
+  background: var(--menu-acrylic);
+  backdrop-filter: blur(50px) saturate(1.15);
+  -webkit-backdrop-filter: blur(50px) saturate(1.15);
+  border: 1px solid var(--menu-stroke);
   border-radius: 8px;
   box-shadow: var(--shadow-menu);
   padding: 4px;

@@ -1,5 +1,6 @@
 import {
   HOME_VIEW,
+  PC_VIEW,
   RECYCLE_PATH,
   baseName,
   splitPath,
@@ -67,13 +68,16 @@ export function canUp(path: string): boolean {
  */
 export function upFrom(path: string): string | null {
   if (path === HOME_VIEW) return null;
-  if (path === RECYCLE_PATH || path === "C:") return HOME_VIEW;
+  if (path === RECYCLE_PATH || path === PC_VIEW) return HOME_VIEW;
+  // 드라이브 루트의 위는 "내 PC"다 (Win11과 같은 계층)
+  if (path === "C:") return PC_VIEW;
   return splitPath(path).slice(0, -1).join("\\");
 }
 
 /** 창 제목과 브레드크럼에 쓰는 이름 */
 export function displayName(path: string): string {
   if (path === HOME_VIEW) return "홈";
+  if (path === PC_VIEW) return "내 PC";
   if (path === RECYCLE_PATH) return "휴지통";
   if (path === "C:") return "로컬 디스크 (C:)";
   return baseName(path);
@@ -87,10 +91,11 @@ export interface Crumb {
 /** 주소 표시줄의 조각들 */
 export function crumbsFor(path: string): Crumb[] {
   if (path === HOME_VIEW) return [{ label: "홈", path: HOME_VIEW }];
+  if (path === PC_VIEW) return [{ label: "내 PC", path: PC_VIEW }];
   if (path === RECYCLE_PATH) return [{ label: "휴지통", path: RECYCLE_PATH }];
   const segs = splitPath(path);
   return [
-    { label: "내 PC", path: HOME_VIEW },
+    { label: "내 PC", path: PC_VIEW },
     ...segs.map((s, i) => ({
       label: i === 0 ? "로컬 디스크 (C:)" : s,
       path: segs.slice(0, i + 1).join("\\"),
@@ -105,7 +110,7 @@ export function filterItems(items: FsNode[], q: string): FsNode[] {
   return items.filter((n) => n.name.toLowerCase().includes(needle));
 }
 
-/** 홈 화면과 휴지통에는 파일 목록이 없다 */
+/** 홈 화면·내 PC·휴지통에는 폴더 목록이 없다 (각자 다른 화면을 그린다) */
 export function isVirtualPath(path: string): boolean {
-  return path === HOME_VIEW || path === RECYCLE_PATH;
+  return path === HOME_VIEW || path === PC_VIEW || path === RECYCLE_PATH;
 }
