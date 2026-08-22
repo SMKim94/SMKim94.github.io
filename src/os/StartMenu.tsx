@@ -2,6 +2,7 @@ import { useState } from "react";
 import { APPS, PINNED, openFile } from "./apps";
 import { HOME, RECYCLE_PATH, fs, useFsVersion, formatDateTime } from "./filesystem";
 import { useSystem } from "./System";
+import { ICON } from "./iconSizes";
 import { useWindows } from "./WindowManager";
 import {
   FileTextIcon,
@@ -69,7 +70,7 @@ export function StartMenu({ onClose }: { onClose: () => void }) {
                 wm.open(a.id);
               }}
             >
-              <a.Icon size={34} />
+              <a.Icon size={ICON.large} />
               <span>{a.name}</span>
             </button>
           ))}
@@ -81,7 +82,7 @@ export function StartMenu({ onClose }: { onClose: () => void }) {
                 wm.open("explorer", { path: RECYCLE_PATH });
               }}
             >
-              <RecycleBinIcon size={34} />
+              <RecycleBinIcon size={ICON.large} />
               <span>휴지통</span>
             </button>
           )}
@@ -104,7 +105,7 @@ export function StartMenu({ onClose }: { onClose: () => void }) {
                   openFile(wm.open, r.path);
                 }}
               >
-                <FileTextIcon size={26} />
+                <FileTextIcon size={ICON.medium} />
                 <span className="sm-recent-name">{r.file.name}</span>
                 <span className="sm-recent-time">
                   {formatDateTime(r.file.mtime)}
