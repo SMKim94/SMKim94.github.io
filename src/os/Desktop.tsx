@@ -6,6 +6,7 @@ import {
 } from "./ContextMenu";
 import { DESKTOP_DIR, RECYCLE_PATH, fs, useFsVersion } from "./filesystem";
 import { openFile } from "./apps";
+import { ICON } from "./iconSizes";
 import { useWindows } from "./WindowManager";
 import {
   CopyIcon,
@@ -179,7 +180,7 @@ export function Desktop() {
           onDoubleClick={() => wm.open("explorer", { path: RECYCLE_PATH })}
           onContextMenu={(e) => onIconContext(e, null, "folder")}
         >
-          <RecycleBinIcon size={46} />
+          <RecycleBinIcon size={ICON.extraLarge} />
           <span className="d-label">휴지통</span>
         </button>
         {items.map((n) => (
@@ -191,11 +192,11 @@ export function Desktop() {
             onContextMenu={(e) => onIconContext(e, n.name, n.type)}
           >
             {n.type === "folder" ? (
-              <FolderIcon size={46} />
+              <FolderIcon size={ICON.extraLarge} />
             ) : n.name.toLowerCase().endsWith(".exe") ? (
-              <ExeIcon size={46} />
+              <ExeIcon size={ICON.extraLarge} />
             ) : (
-              <FileTextIcon size={46} />
+              <FileTextIcon size={ICON.extraLarge} />
             )}
             <span className="d-label">{n.name}</span>
           </button>

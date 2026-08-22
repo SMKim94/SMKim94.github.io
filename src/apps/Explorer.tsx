@@ -15,6 +15,7 @@ import {
   useFsVersion,
   type FsNode,
 } from "../os/filesystem";
+import { ICON } from "../os/iconSizes";
 import { useWindows, type WinState } from "../os/WindowManager";
 import {
   type History,
@@ -399,7 +400,7 @@ export function Explorer({ win }: { win: WinState }) {
                     onDoubleClick={() => navigate(qk.path)}
                     onClick={() => setSel(qk.label)}
                   >
-                    <FolderIcon size={40} />
+                    <FolderIcon size={ICON.large} />
                     <span>{qk.label}</span>
                   </button>
                 ))}
@@ -408,7 +409,7 @@ export function Explorer({ win }: { win: WinState }) {
                   onDoubleClick={() => navigate(PC_VIEW)}
                   onClick={() => setSel("내 PC")}
                 >
-                  <PcIcon size={38} />
+                  <PcIcon size={ICON.large} />
                   <span>내 PC</span>
                 </button>
               </div>
@@ -425,7 +426,7 @@ export function Explorer({ win }: { win: WinState }) {
                   onClick={() => setSel("C:")}
                   onDoubleClick={() => navigate("C:")}
                 >
-                  <DriveIcon size={44} />
+                  <DriveIcon size={ICON.extraLarge} />
                   <div className="ex-drive-info">
                     <span className="ex-drive-name">로컬 디스크 (C:)</span>
                     <span className="ex-drive-bar">
@@ -454,7 +455,7 @@ export function Explorer({ win }: { win: WinState }) {
                     onDoubleClick={() => fs.restore(r.id)}
                     title={`원래 위치: ${r.originalDir}`}
                   >
-                    {nodeIcon(r.node, 44)}
+                    {nodeIcon(r.node, ICON.extraLarge)}
                     <span className="ex-item-name">{r.node.name}</span>
                     <span className="ex-item-sub">{r.originalDir}</span>
                   </button>
@@ -473,7 +474,7 @@ export function Explorer({ win }: { win: WinState }) {
                   onDoubleClick={() => openNode(n)}
                   onContextMenu={(e) => itemContext(e, n)}
                 >
-                  {nodeIcon(n, 44)}
+                  {nodeIcon(n, ICON.extraLarge)}
                   <span className="ex-item-name">{n.name}</span>
                   <span className="ex-item-sub">
                     {formatDateTime(n.mtime)}
