@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { APPS, PINNED, type AppId } from "./apps";
 import { useWindows } from "./WindowManager";
+import { ICON } from "./iconSizes";
 import {
   BellIcon,
   EthernetIcon,
@@ -78,7 +79,7 @@ export function Taskbar({
           aria-label="시작"
           onClick={() => toggle("start")}
         >
-          <StartGlyph size={22} />
+          <StartGlyph size={ICON.medium} />
         </button>
 
         {/* Win11의 검색 알약. 누르면 검색창이 있는 시작 메뉴가 열린다. */}
@@ -87,7 +88,7 @@ export function Taskbar({
           aria-label="검색"
           onClick={() => toggle("start")}
         >
-          <SearchIcon size={15} />
+          <SearchIcon size={ICON.small} />
           <span>검색</span>
         </button>
 
@@ -97,7 +98,7 @@ export function Taskbar({
           title="작업 보기"
           onClick={() => toggle("taskview")}
         >
-          <TaskViewIcon size={20} />
+          <TaskViewIcon size={ICON.medium} />
         </button>
 
         {PINNED.map((id) => {
@@ -114,7 +115,7 @@ export function Taskbar({
               aria-label={def.name}
               onClick={() => onAppClick(id)}
             >
-              <def.Icon size={24} />
+              <def.Icon size={ICON.medium} />
             </button>
           );
         })}
