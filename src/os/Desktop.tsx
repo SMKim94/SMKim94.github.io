@@ -1,14 +1,34 @@
 import { useState, type MouseEvent } from "react";
-import { ContextMenu, type MenuItem } from "./ContextMenu";
+import {
+  ContextMenu,
+  type MenuCommand,
+  type MenuItem,
+} from "./ContextMenu";
 import { DESKTOP_DIR, RECYCLE_PATH, fs, useFsVersion } from "./filesystem";
 import { openFile } from "./apps";
 import { useWindows } from "./WindowManager";
-import { ExeIcon, FileTextIcon, FolderIcon, RecycleBinIcon } from "./icons";
+import {
+  CopyIcon,
+  CopyPathIcon,
+  CutIcon,
+  ExeIcon,
+  FileTextIcon,
+  FolderIcon,
+  MoreOptionsIcon,
+  OpenIcon,
+  PinIcon,
+  RecycleBinIcon,
+  RenameIcon,
+  TrashIcon,
+  WrenchIcon,
+  ZipIcon,
+} from "./icons";
 
 interface MenuState {
   x: number;
   y: number;
   items: MenuItem[];
+  commands?: MenuCommand[];
 }
 
 /** 바탕화면: 월페이퍼 + 아이콘("바탕 화면" 폴더 내용) + 우클릭 메뉴 */
@@ -66,29 +86,82 @@ export function Desktop() {
   ) {
     e.preventDefault();
     e.stopPropagation();
-    const menuItems: MenuItem[] =
-      name === null
-        ? [
-            {
-              label: "열기",
-              onClick: () => wm.open("explorer", { path: RECYCLE_PATH }),
-            },
-            {
-              label: "휴지통 비우기",
-              disabled: fs.recycle.length === 0,
-              onClick: () => fs.emptyRecycle(),
-            },
-          ]
-        : [
-            { label: "열기", onClick: () => openDesktopNode(name, type) },
-            { sep: true },
-            {
-              label: "삭제",
-              onClick: () => fs.remove(`${DESKTOP_DIR}\\${name}`),
-            },
-          ];
-    setSel(name ?? "$recycle");
-    setMenu({ x: e.clientX, y: e.clientY, items: menuItems });
+    if (name === null) {
+      setSel("$recycle");
+      setMenu({
+        x: e.clientX,
+        y: e.clientY,
+        items: [
+          {
+            label: "열기",
+            icon: <OpenIcon size={15} />,
+            shortcut: "Enter",
+            onClick: () => wm.open("explorer", { path: RECYCLE_PATH }),
+          },
+          {
+            label: "휴지통 비우기",
+            icon: <TrashIcon size={15} />,
+            disabled: fs.recycle.length === 0,
+            onClick: () => fs.emptyRecycle(),
+          },
+          { sep: true },
+          {
+            label: "속성",
+            icon: <WrenchIcon size={15} />,
+            shortcut: "Alt+Enter",
+            disabled: true,
+          },
+        ],
+      });
+      return;
+    }
+
+    const path = `${DESKTOP_DIR}\\${name}`;
+    setSel(name);
+    setMenu({
+      x: e.clientX,
+      y: e.clientY,
+      // Win11은 자주 쓰는 넷을 위쪽 아이콘 줄로 뺀다
+      commands: [
+        { label: "잘라내기", icon: <CutIcon size={16} />, disabled: true },
+        { label: "복사", icon: <CopyIcon size={16} />, disabled: true },
+        { label: "이름 바꾸기", icon: <RenameIcon size={16} />, disabled: true },
+        {
+          label: "삭제",
+          icon: <TrashIcon size={16} />,
+          onClick: () => fs.remove(path),
+        },
+      ],
+      items: [
+        {
+          label: "열기",
+          icon: <OpenIcon size={15} />,
+          shortcut: "Enter",
+          onClick: () => openDesktopNode(name, type),
+        },
+        { label: "즐겨찾기에 고정", icon: <PinIcon size={15} />, disabled: true },
+        { label: "시작 화면에 고정", icon: <PinIcon size={15} />, disabled: true },
+        { label: "압축...", icon: <ZipIcon size={15} />, disabled: true },
+        {
+          label: "경로로 복사",
+          icon: <CopyPathIcon size={15} />,
+          shortcut: "Ctrl+Shift+C",
+          onClick: () => void navigator.clipboard?.writeText(path),
+        },
+        {
+          label: "속성",
+          icon: <WrenchIcon size={15} />,
+          shortcut: "Alt+Enter",
+          disabled: true,
+        },
+        { sep: true },
+        {
+          label: "추가 옵션 표시",
+          icon: <MoreOptionsIcon size={15} />,
+          disabled: true,
+        },
+      ],
+    });
   }
 
   return (

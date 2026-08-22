@@ -1,4 +1,5 @@
 import {
+  DRIVE_FREE_BYTES,
   HOME_VIEW,
   byteSize,
   fs,
@@ -106,7 +107,7 @@ export function cmdDir(host: TerminalHost, arg: string | undefined): string[] {
     }
   }
   out.push(`${String(fileCount).padStart(15)}개 파일  ${comma(total).padStart(17)} 바이트`);
-  out.push(`${String(dirCount).padStart(15)}개 디렉터리  ${comma(107374182400).padStart(15)} 바이트 남음`);
+  out.push(`${String(dirCount).padStart(15)}개 디렉터리  ${comma(DRIVE_FREE_BYTES).padStart(15)} 바이트 남음`);
   return out;
 }
 

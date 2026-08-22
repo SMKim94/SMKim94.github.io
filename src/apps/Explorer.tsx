@@ -5,7 +5,10 @@ import {
   DESKTOP_DIR,
   DOCUMENTS_DIR,
   HOME,
+  DRIVE_FREE_BYTES,
+  DRIVE_TOTAL_BYTES,
   HOME_VIEW,
+  PC_VIEW,
   RECYCLE_PATH,
   formatDateTime,
   fs,
@@ -37,6 +40,7 @@ import {
   CutIcon,
   DocMonoIcon,
   DownloadIcon,
+  DriveIcon,
   ExeIcon,
   FileTextIcon,
   FolderIcon,
@@ -71,6 +75,16 @@ interface MenuState {
   y: number;
   items: MenuItem[];
 }
+
+/** 바이트를 "952GB"처럼 적는다 (Win11 탐색기 표기) */
+function gb(bytes: number): string {
+  return `${Math.round(bytes / 1024 ** 3)}GB`;
+}
+
+/** 드라이브 사용률(%) — 막대 길이에 쓴다 */
+const drivePercentUsed = Math.round(
+  ((DRIVE_TOTAL_BYTES - DRIVE_FREE_BYTES) / DRIVE_TOTAL_BYTES) * 100,
+);
 
 function nodeIcon(n: FsNode, size: number) {
   if (n.type === "folder") return <FolderIcon size={size} />;
@@ -208,7 +222,9 @@ export function Explorer({ win }: { win: WinState }) {
   const statusCount =
     path === RECYCLE_PATH
       ? fs.recycle.length
-      : path === HOME_VIEW
+      : path === PC_VIEW
+        ? 1
+        : path === HOME_VIEW
         ? QUICK.length + 1
         : items.length;
 
@@ -342,11 +358,18 @@ export function Explorer({ win }: { win: WinState }) {
           ))}
           <div className="ex-side-sep" />
           <button
-            className={`ex-side ${path === "C:" ? "active" : ""}`}
-            onClick={() => navigate("C:")}
+            className={`ex-side ${path === PC_VIEW ? "active" : ""}`}
+            onClick={() => navigate(PC_VIEW)}
           >
             <PcIcon size={16} />
             <span>내 PC</span>
+          </button>
+          <button
+            className={`ex-side ex-side-child ${path === "C:" ? "active" : ""}`}
+            onClick={() => navigate("C:")}
+          >
+            <DriveIcon size={16} />
+            <span>로컬 디스크 (C:)</span>
           </button>
           <button
             className={`ex-side ${path === RECYCLE_PATH ? "active" : ""}`}
@@ -382,11 +405,39 @@ export function Explorer({ win }: { win: WinState }) {
                 ))}
                 <button
                   className="ex-home-tile"
-                  onDoubleClick={() => navigate("C:")}
+                  onDoubleClick={() => navigate(PC_VIEW)}
                   onClick={() => setSel("내 PC")}
                 >
                   <PcIcon size={38} />
-                  <span>로컬 디스크 (C:)</span>
+                  <span>내 PC</span>
+                </button>
+              </div>
+            </>
+          ) : path === PC_VIEW ? (
+            <>
+              <div className="ex-section-title ex-group-title">
+                <ChevronDownIcon size={12} />
+                <span>장치 및 드라이브</span>
+              </div>
+              <div className="ex-drive-grid">
+                <button
+                  className={`ex-drive ${sel === "C:" ? "selected" : ""}`}
+                  onClick={() => setSel("C:")}
+                  onDoubleClick={() => navigate("C:")}
+                >
+                  <DriveIcon size={44} />
+                  <div className="ex-drive-info">
+                    <span className="ex-drive-name">로컬 디스크 (C:)</span>
+                    <span className="ex-drive-bar">
+                      <span
+                        className="ex-drive-fill"
+                        style={{ width: `${drivePercentUsed}%` }}
+                      />
+                    </span>
+                    <span className="ex-drive-sub">
+                      {gb(DRIVE_TOTAL_BYTES)} 중 {gb(DRIVE_FREE_BYTES)} 사용 가능
+                    </span>
+                  </div>
                 </button>
               </div>
             </>

@@ -265,6 +265,91 @@ export function UserIcon(p: P) {
   );
 }
 
+// ── 컨텍스트 메뉴 ────────────────────────────────────────
+/** 열기 */
+export function OpenIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <path d="M3 8.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+    </Mono>
+  );
+}
+
+/** 고정(핀) */
+export function PinIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <path d="M9 3h6l-1 6 3.5 3.5V15H6.5v-2.5L10 9Z" />
+      <path d="M12 15v6" />
+    </Mono>
+  );
+}
+
+/** 압축 */
+export function ZipIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <path d="M4 6a2 2 0 0 1 2-2h5l2 2h5a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" />
+      <path d="M11 9h2M11 12h2M11 15h2" />
+    </Mono>
+  );
+}
+
+/** 경로로 복사 */
+export function CopyPathIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <rect x="9" y="4" width="11" height="13" rx="2" />
+      <path d="M15 20H6a2 2 0 0 1-2-2V8" />
+    </Mono>
+  );
+}
+
+/** 속성(렌치) */
+export function WrenchIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <g transform="translate(1.5 2.5)">
+      <path d="M14.7 9.3a4.6 4.6 0 0 1-5.6-5.6l2.6 2.6 2.4-.6.6-2.4-2.6-2.6a4.6 4.6 0 0 1 5.6 5.6" />
+      <path d="m13.4 10.6-8 8a2.1 2.1 0 0 1-3-3l8-8" />
+      </g>
+    </Mono>
+  );
+}
+
+/** 추가 옵션 표시 */
+export function MoreOptionsIcon(p: P) {
+  return (
+    <Mono {...p}>
+      <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+      <path d="M8 12h8M12.5 8.5 16 12l-3.5 3.5" />
+    </Mono>
+  );
+}
+
+/** 로컬 디스크 — 시스템 드라이브라 왼쪽 위에 창 문양을 얹는다 */
+export function DriveIcon({ size = 48 }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden>
+      {/* 드라이브 본체 */}
+      <path
+        d="M9 24h34a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V27a3 3 0 0 1 3-3Z"
+        fill="#7d8894"
+      />
+      {/* 윗면 하이라이트 */}
+      <path d="M9 24h34a3 3 0 0 1 3 3v3H6v-3a3 3 0 0 1 3-3Z" fill="#9aa5b1" />
+      {/* 상태 표시등과 라벨 */}
+      <circle cx="41" cy="36.5" r="2" fill="#c8f7c5" />
+      <rect x="11" y="35" width="15" height="3" rx="1.5" fill="#cfd6dd" />
+      {/* 시스템 드라이브 표시 */}
+      <rect x="4" y="4" width="7" height="7" rx="0.7" fill="#0078d4" />
+      <rect x="12.5" y="4" width="7" height="7" rx="0.7" fill="#0078d4" />
+      <rect x="4" y="12.5" width="7" height="7" rx="0.7" fill="#0078d4" />
+      <rect x="12.5" y="12.5" width="7" height="7" rx="0.7" fill="#0078d4" />
+    </svg>
+  );
+}
+
 // ── 작업표시줄·시스템 트레이 ─────────────────────────────
 /** 작업 보기: 큰 창 하나와 오른쪽에 작은 창 둘 */
 export function TaskViewIcon(p: P) {

@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { HOME, HOME_VIEW, RECYCLE_PATH, type FsNode } from "../os/filesystem";
+import {
+  HOME,
+  HOME_VIEW,
+  PC_VIEW,
+  RECYCLE_PATH,
+  type FsNode,
+} from "../os/filesystem";
 import {
   back,
   canBack,
@@ -130,8 +136,14 @@ describe("canUp / upFrom", () => {
     expect(upFrom(RECYCLE_PATH)).toBe(HOME_VIEW);
   });
 
-  it("드라이브 루트에서도 홈 화면으로", () => {
-    expect(upFrom("C:")).toBe(HOME_VIEW);
+  it("내 PC에서는 홈 화면으로", () => {
+    expect(canUp(PC_VIEW)).toBe(true);
+    expect(upFrom(PC_VIEW)).toBe(HOME_VIEW);
+  });
+
+  // Win11 계층: C:\\... 의 위는 드라이브 루트, 그 위는 내 PC, 그 위가 홈이다
+  it("드라이브 루트의 위는 내 PC", () => {
+    expect(upFrom("C:")).toBe(PC_VIEW);
   });
 
   it("보통 폴더는 상위 폴더로", () => {
@@ -162,6 +174,10 @@ describe("displayName", () => {
     expect(displayName("C:")).toBe("로컬 디스크 (C:)");
   });
 
+  it("내 PC", () => {
+    expect(displayName(PC_VIEW)).toBe("내 PC");
+  });
+
   it("보통 폴더는 마지막 이름", () => {
     expect(displayName(HOME)).toBe("SMKim94");
   });
@@ -183,7 +199,11 @@ describe("crumbsFor", () => {
   });
 
   it("보통 경로는 내 PC로 시작한다", () => {
-    expect(crumbsFor(HOME)[0]).toEqual({ label: "내 PC", path: HOME_VIEW });
+    expect(crumbsFor(HOME)[0]).toEqual({ label: "내 PC", path: PC_VIEW });
+  });
+
+  it("내 PC 화면은 한 조각", () => {
+    expect(crumbsFor(PC_VIEW)).toEqual([{ label: "내 PC", path: PC_VIEW }]);
   });
 
   it("첫 세그먼트는 로컬 디스크로 적는다", () => {
@@ -195,7 +215,7 @@ describe("crumbsFor", () => {
 
   it("각 조각이 그 지점까지의 경로를 가리킨다", () => {
     expect(crumbsFor(HOME)).toEqual([
-      { label: "내 PC", path: HOME_VIEW },
+      { label: "내 PC", path: PC_VIEW },
       { label: "로컬 디스크 (C:)", path: "C:" },
       { label: "Users", path: "C:\\Users" },
       { label: "SMKim94", path: "C:\\Users\\SMKim94" },
@@ -246,8 +266,9 @@ describe("filterItems", () => {
 });
 
 describe("isVirtualPath", () => {
-  it("홈 화면과 휴지통은 가상 경로", () => {
+  it("홈 화면·내 PC·휴지통은 가상 경로", () => {
     expect(isVirtualPath(HOME_VIEW)).toBe(true);
+    expect(isVirtualPath(PC_VIEW)).toBe(true);
     expect(isVirtualPath(RECYCLE_PATH)).toBe(true);
   });
 
