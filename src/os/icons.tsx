@@ -17,7 +17,14 @@ interface P {
 }
 
 // ── 시작 버튼: 중립적인 4분할 글리프 ──────────────────
-export function StartGlyph({ size = 22 }: P) {
+/**
+ * 시작 단추 글리프.
+ *
+ * 실측: 24px 캔버스 안에서 글리프가 23x23이고, 위로 1px 띄운 채
+ * 아래는 캔버스에 붙는다. 그래서 가로는 0.5~23.5, 세로는 1~24에
+ * 걸치도록 그린다. 사각형 사이 간격은 2다.
+ */
+export function StartGlyph({ size = 24 }: P) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
       <defs>
@@ -26,10 +33,10 @@ export function StartGlyph({ size = 22 }: P) {
           <stop offset="1" stopColor="#0067c0" />
         </linearGradient>
       </defs>
-      <rect x="2.5" y="2.5" width="9" height="9" rx="1.6" fill="url(#stg)" />
-      <rect x="12.5" y="2.5" width="9" height="9" rx="1.6" fill="url(#stg)" />
-      <rect x="2.5" y="12.5" width="9" height="9" rx="1.6" fill="url(#stg)" />
-      <rect x="12.5" y="12.5" width="9" height="9" rx="1.6" fill="url(#stg)" />
+      <rect x="0.5" y="1" width="10.5" height="10.5" rx="1.2" fill="url(#stg)" />
+      <rect x="13" y="1" width="10.5" height="10.5" rx="1.2" fill="url(#stg)" />
+      <rect x="0.5" y="13.5" width="10.5" height="10.5" rx="1.2" fill="url(#stg)" />
+      <rect x="13" y="13.5" width="10.5" height="10.5" rx="1.2" fill="url(#stg)" />
     </svg>
   );
 }

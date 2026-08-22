@@ -412,11 +412,13 @@ textarea {
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 2px;
+  /* 실측 버튼 피치가 44px이고 단추끼리 붙어 있다. 간격을 0으로 두고
+     너비 44px이 그대로 피치가 되게 한다. 검색 알약만 좌우 4px를 갖는다. */
+  gap: 0;
 }
 
 .tb-btn {
-  width: 40px;
+  width: 44px;
   height: 40px;
   border-radius: 5px;
   display: flex;
@@ -443,7 +445,9 @@ textarea {
 .tb-btn.running::after {
   content: "";
   position: absolute;
-  bottom: 2px;
+  /* 실측 위치는 48px 바에서 y 40~42. 단추가 40px이라 위아래 4px씩
+     남으므로(y 4~43), 아래에서 1px 띄우면 정확히 그 자리가 된다. */
+  bottom: 1px;
   left: 50%;
   transform: translateX(-50%);
   width: 6px;
@@ -461,13 +465,14 @@ textarea {
 }
 
 /* 검색 알약 — Win11 "검색 아이콘 및 레이블" 모드.
-   폭이 내용에 맞춰 늘어나지 않고 96px로 고정되어, 짧은 "검색" 뒤로
-   빈 공간이 남는다. 실제 작업표시줄이 그렇게 보인다. */
+   실측 100 x 32. 폭이 내용에 맞춰 늘어나지 않고 고정이라 짧은 "검색"
+   뒤로 빈 공간이 남는다. 48px 바 안에서 위아래로 8px씩 남는다.
+   좌우 4px는 단추와의 실측 간격이다. */
 .tb-search {
   height: 32px;
-  width: 96px;
+  width: 100px;
   padding: 0 12px;
-  margin: 0 2px;
+  margin: 0 4px;
   display: flex;
   align-items: center;
   gap: 8px;
