@@ -107,8 +107,8 @@ export function Notepad({ win }: { win: WinState }) {
               { label: "바꾸기", shortcut: "Ctrl+H", disabled: true },
             ]
           : [
-              { label: "확대", shortcut: "Ctrl+더하기", disabled: true },
-              { label: "축소", shortcut: "Ctrl+빼기", disabled: true },
+              { label: "확대", shortcut: "Ctrl++", disabled: true },
+              { label: "축소", shortcut: "Ctrl+-", disabled: true },
               { label: "상태 표시줄", disabled: true },
               { label: "자동 줄 바꿈", disabled: true },
             ];
